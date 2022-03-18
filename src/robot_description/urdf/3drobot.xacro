@@ -1,0 +1,507 @@
+<?xml version="1.0"?>
+
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" 
+	xmlns:sensor="http://playerstage.sourceforge.net/gazebo/xmlschema/#sensor"
+	xmlns:controller="http://playerstage.sourceforge.net/gazebo/xmlschema/#controller"
+	xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface"
+	name="3drobot_xacro">
+
+	<!--Color description.-->
+	<material name="gray">
+	<color rgba="0.58 0.65 0.65 1"/>
+	</material>
+
+	<material name="gray2">
+	<color rgba="0.58 0.65 0.65 1"/>
+	</material>
+
+	<!--Importations-->
+	<xacro:include filename="$(find robot_description)/urdf/3drobot.gazebo" />
+	<xacro:macro name="default_inertial" params="mass">
+               <inertial>
+                       <mass value="${mass}" />
+                       <inertia ixx="1.0" ixy="0.0" ixz="0.0"
+                                iyy="1.0" iyz="0.0"
+                                izz="1.0" />
+               </inertial>
+	</xacro:macro>
+
+  	<xacro:macro name="transmission_block" params="joint_name">
+		<transmission name="tran1">
+			<type>transmission_interface/SimpleTransmission</type>
+			<joint name="${joint_name}">
+				<hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+				
+			</joint>
+			<actuator name="motor1">
+    			<mechanicalReduction>1</mechanicalReduction>
+    			<hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+  			</actuator>
+		</transmission>
+	</xacro:macro>
+	
+	<!--Links definition.-->
+	<link name="base_link">
+   		<visual>
+			<geometry>
+      			<mesh filename="package://robot_description/meshes/base.STL" scale="0.001 0.001 0.001"/>
+     		</geometry>
+			<origin rpy="0 0 0" xyz="-0.14364 -0.14364 0.0157"/>
+			<material name="gray"/>
+   		</visual>
+		<collision>
+			<geometry>
+				<box size="0.287279 0.287279 0.239"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="0 0 0.135"/>
+		</collision>
+		<xacro:default_inertial mass="20.0"/>
+ 	</link>
+
+ 	<link name="wheel_1">
+   		<visual>
+     		<geometry>
+       			<mesh filename="package://robot_description/meshes/omniwheel.STL" scale="0.001 0.001 0.001"/>
+     		</geometry>
+			<origin rpy="1.5708 0 0" xyz="-0.046275 0.019675 -0.046275"/>
+			<material name="gray2"/>>
+		</visual>
+		<collision>
+			<geometry>
+				
+				<cylinder length="0.03935" radius="0.041275"/>
+			</geometry>
+			<origin rpy="1.5708 0 0" xyz="0 0 0"/>
+		</collision>
+		<xacro:default_inertial mass="0.127"/>
+ 	</link>
+
+ 	<link name="wheel_2">
+   		<visual>
+     		<geometry>
+       			<mesh filename="package://robot_description/meshes/omniwheel.STL" scale="0.001 0.001 0.001"/>
+     		</geometry>
+			<origin rpy="1.5708 0 0" xyz="-0.046275 0.019675 -0.046275"/>
+			<material name="gray2"/>>
+		</visual>
+		<collision>
+			<geometry>
+       		  <cylinder length="0.03935" radius="0.041275"/>		
+			</geometry>
+			<origin rpy="1.5708 0 0" xyz="0 0 0"/>
+		</collision>
+		<xacro:default_inertial mass="0.127"/>
+ 	</link>
+
+ 	<link name="wheel_3">
+   		<visual>
+     		<geometry>
+       			<mesh filename="package://robot_description/meshes/omniwheel.STL" scale="0.001 0.001 0.001"/>
+     		</geometry>
+			<origin rpy="1.5708 0 0" xyz="-0.046275 0.019675 -0.046275"/>
+			<material name="gray2"/>>
+		</visual>
+		<collision>
+			<geometry>
+       			  <cylinder length="0.03935" radius="0.041275"/>
+			</geometry>
+			<origin rpy="1.5708 0 0" xyz="0 0 0"/>
+		</collision>
+		<xacro:default_inertial mass="0.127"/>
+ 	</link>
+
+ 	<link name="wheel_4">
+   		<visual>
+     		<geometry>
+       			<mesh filename="package://robot_description/meshes/omniwheel.STL" scale="0.001 0.001 0.001"/>
+     		</geometry>
+			<origin rpy="1.5708 0 0" xyz="-0.046275 0.019675 -0.046275"/>
+			<material name="gray2"/>>
+		</visual>
+		<collision>
+			<geometry>
+       			<cylinder length="0.03935" radius="0.041275"/>
+			</geometry>
+			<origin rpy="1.5708 0 0" xyz="0 0 0"/>
+		</collision>
+		<xacro:default_inertial mass="0.127"/>
+ 	</link>
+
+	  	<link name="z_axis">
+   		<visual>
+     		<geometry>
+       			<mesh filename="package://robot_description/meshes/ejez.STL" scale="0.001 0.001 0.001"/>
+     		</geometry>
+			<origin rpy="0 0 0" xyz="-0.01 -0.05976 0"/>
+			<material name="gray2"/>>
+		</visual>
+		<collision>
+			<geometry>
+       			<box size="0.0565 0.119526 0.323"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="0.027 0 0.163"/>
+		</collision>
+		<xacro:default_inertial mass="0.19422"/>
+ 	</link>
+
+	<link name="imu_link">
+		<visual>
+			<geometry>
+				<mesh filename="package://robot_description/meshes/imu.STL" scale="0.001 0.001 0.001"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="0 0 0"/>
+			<material name="gray2"/>>
+		</visual>
+
+		<collision>
+			<geometry>
+       			<box size="0.04 0.02 0.001"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="0 0 0"/>
+		</collision>
+
+		<xacro:default_inertial mass="0.00218"/>
+ 	</link>
+
+  <link
+    name="support">
+	<xacro:default_inertial mass="0.012"/>
+    <visual>
+      <origin
+        xyz="-0.068 -0.0599 0.006"
+        rpy="1.5708 0 1.5708" />
+      <geometry>
+        <mesh
+          filename="package://robot_description/meshes/Soporte_hotend.STL" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.203921568627451 0.203921568627451 0.203921568627451 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="-0.068 -0.0599 0.006"
+        rpy="1.5708 0 1.5708" />
+      <geometry>
+        <mesh
+          filename="package://robot_description/meshes/Soporte_hotend.STL" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <link
+    name="base_link_b">
+    <inertial>
+      <origin
+        xyz="0.000356203093126534 -0.0129880878092186 4.16333634234434E-17"
+        rpy="0 0 0" />
+      <mass
+        value="0.0367636504591507" />
+      <inertia
+        ixx="1.59327646624515E-05"
+        ixy="-9.03565121280128E-10"
+        ixz="6.95903156332929E-22"
+        iyy="7.98367062317143E-06"
+        iyz="1.73674612890011E-22"
+        izz="2.21410708857523E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 -1.5708" />
+      <geometry>
+        <mesh
+          filename="package://robot_description/meshes/base_link_b.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.203921568627451 0.203921568627451 0.203921568627451 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://robot_description/meshes/base_link_b.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+  <link
+    name="Link1_b">
+    <inertial>
+      <origin
+        xyz="0.0138384761081313 1.18825325973182E-05 0.0239635597028051"
+        rpy="0 0 0" />
+      <mass
+        value="0.258108782462969" />
+      <inertia
+        ixx="3.98859073664036E-05"
+        ixy="-1.52473138522623E-07"
+        ixz="-6.28891691778649E-09"
+        iyy="0.000216808614679193"
+        iyz="1.12116084216567E-12"
+        izz="0.000248722761965318" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="-0.021 -0.021 -0.322"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://robot_description/meshes/Link1_b.STL" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.203921568627451 0.203921568627451 0.203921568627451 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="-0.021 -0.021 -0.322"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://robot_description/meshes/Link1_b.STL" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <link
+    name="Link2_b">
+    <inertial>
+      <origin
+        xyz="0.013845350702378 1.19792284548059E-05 0.0239635596975925"
+        rpy="0 0 0" />
+      <mass
+        value="0.258108782397829" />
+      <inertia
+        ixx="3.98859072753747E-05"
+        ixy="-1.524410962612E-07"
+        ixz="6.28891489352419E-09"
+        iyy="0.000216808614766749"
+        iyz="4.29898332195258E-12"
+        izz="0.000248722761962003" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="-0.021 -0.021 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://robot_description/meshes/Link2_b.STL" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.203921568627451 0.203921568627451 0.203921568627451 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="-0.021 -0.021 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://robot_description/meshes/Link2_b.STL" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <link
+    name="Extrusor">
+    <inertial>
+      <origin
+        xyz="0.00134982001823841 0.0198829413157027 -0.0331588621043219"
+        rpy="0 0 0" />
+      <mass
+        value="0.85514562651405" />
+      <inertia
+        ixx="0.000148143226540988"
+        ixy="-6.20944338766881E-08"
+        ixz="1.80900003371049E-08"
+        iyy="0.000262030279718385"
+        iyz="-2.42623150210062E-09"
+        izz="0.000167567646225701" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://robot_description/meshes/Extrusor.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://robot_description/meshes/Extrusor.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+	<!--Joints definition.-->
+
+	<joint
+		name="Joint0_b"
+		type="fixed">
+		<origin
+		xyz="0.025 0.002 0.0225"
+		rpy="0 0 0" />
+		<parent
+		link="support" />
+		<child
+		link="base_link_b" />
+		<axis
+		xyz="0 0 0" />
+	</joint>
+
+	<joint
+		name="Joint1_b"
+		type="continuous">
+		<origin
+		xyz="0 0 0"
+		rpy="0 0 0" />
+		<parent
+		link="base_link_b" />
+		<child
+		link="Link1_b" />
+		<axis
+		xyz="0 0 1" />
+		<!--<limit
+		lower="-1.5708"
+		upper="1.5708"
+		effort="0"
+		velocity="0" />-->
+	</joint>
+
+	<joint
+		name="Joint2_b"
+		type="continuous">
+		<origin
+		xyz="0.280 0.00015341 -0.005"
+		rpy="0 0 0" />
+		<parent
+		link="Link1_b" />
+		<child
+		link="Link2_b" />
+		<axis
+		xyz="0 0 1" />
+		<!--<limit
+		lower="-3.1416"
+		upper="3.1416"
+		effort="0"
+		velocity="0" />-->
+	</joint>
+	
+	<joint
+		name="Joint3_b"
+		type="fixed">
+		<origin
+		xyz="0.140 0.00015341 0"
+		rpy="0 0 0" />
+		<parent
+		link="Link2_b" />
+		<child
+		link="Extrusor" />
+		<axis
+		xyz="0 0 0" />
+	</joint>
+
+	<joint name="base_to_wheel1" type="continuous">
+		<parent link="base_link"/>
+		<child link="wheel_1"/>
+		<origin rpy="0 0 -0.7854" xyz="0.13145 0.13145 0.04115"/>
+		<axis xyz="0 1 0" />
+	</joint>
+
+	<joint name="base_to_wheel2" type="continuous">
+		<parent link="base_link"/>
+		<child link="wheel_2"/>
+		<origin rpy="0 0 0.7854" xyz="-0.13145 0.13145 0.04115"/>
+		<axis xyz="0 1 0" />
+	</joint>
+
+	<joint name="base_to_wheel3" type="continuous">
+		<parent link="base_link"/>
+		<child link="wheel_3"/>
+		<origin rpy="0 0 2.3562" xyz="-0.13145 -0.13145 0.04115"/>
+		<axis xyz="0 1 0" />
+	</joint>
+
+	<joint name="base_to_wheel4" type="continuous">
+		<parent link="base_link"/>
+		<child link="wheel_4"/>
+		<origin rpy="0 0 -2.3562" xyz="0.13145 -0.13145 0.04115"/>
+		<axis xyz="0 1 0" />
+	</joint>
+
+	<joint name="base_to_zaxis" type="fixed">
+		<parent link="base_link"/>
+		<child link="z_axis"/>
+		<origin rpy="0 0 0" xyz="0.14364 0 0.04115"/>
+	</joint>
+
+	<joint name="imu_joint" type="fixed">
+		<parent link="base_link"/>
+		<child link="imu_link"/>
+		<origin rpy="0 0 0" xyz="0 0 0.079"/>
+	</joint>
+
+	<joint name="zaxis_to_support" type="prismatic">
+		<parent link="z_axis"/>
+		<child link="support"/>
+		<origin rpy="0 0 0" xyz="0.075 0 -0.04115"/>
+		<limit effort="10.0" lower="0.08" upper="0.26" velocity="0.001"/>
+		<axis xyz="0 0 1" />
+	</joint>
+
+  	<xacro:transmission_block joint_name="Joint1_b"/>
+	<xacro:transmission_block joint_name="Joint2_b"/>
+
+	<gazebo>
+		<plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+			<robotNamespace>robot1</robotNamespace>
+			<robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>
+		</plugin>
+  	</gazebo>
+
+	<!-- Drive controller -->
+	<gazebo>
+		<plugin name="omni_steering" filename="libgazebo_ros_planar_move.so">
+			<commandTopic>cmd_vel</commandTopic>
+			<odometrytopic>odom</odometrytopic>
+			<odometryFrame>odom</odometryFrame>
+			<odometryRate>50.0</odometryRate>
+			<robotBaseFrame>base_link</robotBaseFrame>
+			<publishTF>false</publishTF>
+		</plugin>		
+	</gazebo>
+
+
+	<!--
+	<gazebo>
+		<plugin name="ground_truth" filename="libgazebo_ros_p3d.so">
+			<frameName>map</frameName>
+			<bodyName>base_link</bodyName>
+			<topicName>odom</topicName>
+			<updateRate>30.0</updateRate>
+		</plugin>
+	</gazebo>
+	-->
+</robot>
